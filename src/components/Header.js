@@ -88,6 +88,9 @@ const Header = () => {
               <Link className="dropdown-item" to="#">
                 Ajustes
               </Link>
+              <Link className="dropdown-item" to="/releaseNotes">
+                Notas de la versión
+              </Link>
               <Link
                 onClick={logoutHandler}
                 className="dropdown-item text-danger"

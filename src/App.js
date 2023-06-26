@@ -17,6 +17,7 @@ import PrivateRouter from './PrivateRouter';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from './Redux/Actions/ProductActions';
 import { listOrders } from './Redux/Actions/OrderActions';
+import ReleaseNotesScreen from './screens/ReleaseNotesScreen';
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ function App() {
           <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
           <PrivateRouter path="/addproduct" component={AddProduct} />
           <PrivateRouter path="/users" component={UsersScreen} />
+          <PrivateRouter path="/releaseNotes" component={ReleaseNotesScreen} />
           <PrivateRouter
             path="/product/:id/edit"
             component={ProductEditScreen}
