@@ -20,6 +20,14 @@ import {
   categoryUpdateReducer,
 } from './Reducers/CategoryReducers';
 
+import {
+  supplierListReducer,
+  supplierDetailsReducer,
+  supplierCreateReducer,
+  supplierUpdateReducer,
+  supplierDeleteReducer,
+} from './Reducers/supplierReducers';
+
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userList: userListReducer,
@@ -34,6 +42,11 @@ const reducer = combineReducers({
   categoryList: categoryListReducer,
   categoryDelete: categoryDeleteReducer,
   categoryUpdate: categoryUpdateReducer,
+  supplierList: supplierListReducer,
+  supplierDetails: supplierDetailsReducer,
+  supplierCreate: supplierCreateReducer,
+  supplierUpdate: supplierUpdateReducer,
+  supplierDelete: supplierDeleteReducer,
 });
 
 // login
