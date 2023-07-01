@@ -6,7 +6,7 @@ import {
   deleteCategory,
 } from '../../Redux/Actions/CategoryActions';
 
-const CategoriesTable = () => {
+const CategoriesTable = ({ onEditCategory }) => {
   const dispatch = useDispatch();
 
   const categoryList = useSelector((state) => state.categoryList);
@@ -79,9 +79,12 @@ const CategoriesTable = () => {
                       <i className="fas fa-ellipsis-h"></i>
                     </Link>
                     <div className="dropdown-menu">
-                      <Link className="dropdown-item" to="#">
+                      <button
+                        className="dropdown-item"
+                        onClick={() => onEditCategory(category)}
+                      >
                         Editar información
-                      </Link>
+                      </button>
                       <button
                         className="dropdown-item text-danger"
                         onClick={() => deleteHandler(category._id)}

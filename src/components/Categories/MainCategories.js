@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateCategory from './CreateCategory';
 import CategoriesTable from './CategoriesTable';
 
 const MainCategories = () => {
+  const [editMode, setEditMode] = useState(false);
+  const [editCategory, setEditCategory] = useState(null);
+
+  const handleEditCategory = (category) => {
+    setEditMode(true);
+    setEditCategory(category);
+  };
+
+  const handleCancelEdit = () => {
+    setEditMode(false);
+    setEditCategory(null);
+  };
+
   return (
     <section className="content-main">
       <div className="content-header">
@@ -13,9 +26,13 @@ const MainCategories = () => {
         <div className="card-body">
           <div className="row">
             {/* Create category */}
-            <CreateCategory />
+            <CreateCategory
+              editMode={editMode}
+              editCategory={editCategory}
+              onCancelEdit={handleCancelEdit}
+            />
             {/* Categories table */}
-            <CategoriesTable />
+            <CategoriesTable onEditCategory={handleEditCategory} />
           </div>
         </div>
       </div>

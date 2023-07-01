@@ -1,22 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   createCategory,
   listCategories,
+  updateCategory,
 } from '../../Redux/Actions/CategoryActions';
 
-const CreateCategory = () => {
+const CreateCategory = ({ editMode, editCategory, onCancelEdit }) => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (editMode && editCategory) {
+      setName(editCategory.name);
+      setDescription(editCategory.description);
+    }
+  }, [editMode, editCategory]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createCategory(name, description));
-    dispatch(listCategories()); // Actualización de la lista de categorías
+    if (editMode && editCategory) {
+      await dispatch(
+        updateCategory({ _id: editCategory._id, name, description })
+      );
+    } else {
+      await dispatch(createCategory(name, description));
+    }
+    await dispatch(listCategories());
     setName('');
     setDescription('');
+    onCancelEdit();
   };
+
+  const buttonText = editMode ? 'Editar categoría' : 'Crear categoría';
 
   return (
     <div className="col-md-12 col-lg-4">
@@ -47,8 +64,17 @@ const CreateCategory = () => {
 
         <div className="d-grid">
           <button type="submit" className="btn btn-primary py-3">
-            Crear categoría
+            {buttonText}
           </button>
+          {editMode && (
+            <button
+              type="button"
+              className="btn btn-secondary mt-2"
+              onClick={onCancelEdit}
+            >
+              Cancelar edición
+            </button>
+          )}
         </div>
       </form>
     </div>
