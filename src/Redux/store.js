@@ -14,6 +14,10 @@ import {
   orderDetailsReducer,
   orderListReducer,
 } from './Reducers/OrderReducres';
+import {
+  categoryListReducer,
+  categoryDeleteReducer,
+} from './Reducers/CategoryReducers';
 
 const reducer = combineReducers({
   userLogin: userLoginReducer,
@@ -26,6 +30,8 @@ const reducer = combineReducers({
   orderList: orderListReducer,
   orderDetails: orderDetailsReducer,
   orderDeliver: orderDeliveredReducer,
+  categoryList: categoryListReducer,
+  categoryDelete: categoryDeleteReducer,
 });
 
 // login
