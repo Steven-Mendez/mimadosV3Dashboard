@@ -51,37 +51,43 @@ export const listCategories = () => async (dispatch, getState) => {
   }
 };
 
-export const createCategory = (name) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CATEGORY_CREATE_REQUEST });
+export const createCategory =
+  (name, description) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: CATEGORY_CREATE_REQUEST });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
 
-    const { data } = await axios.post('/api/categories', { name }, config);
+      const body = {
+        name: name,
+        description: description,
+      };
 
-    dispatch({ type: CATEGORY_CREATE_SUCCESS, payload: data });
-  } catch (error) {
-    const message =
-      error.response && error.response.data.message
-        ? error.response.data.message
-        : error.message;
-    if (message === 'Not authorized, token failed') {
-      dispatch(logout());
+      const { data } = await axios.post('/api/categories', body, config);
+
+      dispatch({ type: CATEGORY_CREATE_SUCCESS, payload: data });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === 'Not authorized, token failed') {
+        dispatch(logout());
+      }
+      dispatch({
+        type: CATEGORY_CREATE_FAIL,
+        payload: message,
+      });
     }
-    dispatch({
-      type: CATEGORY_CREATE_FAIL,
-      payload: message,
-    });
-  }
-};
+  };
 
 export const updateCategory = (category) => async (dispatch, getState) => {
   try {
