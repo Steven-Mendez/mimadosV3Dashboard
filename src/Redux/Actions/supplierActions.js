@@ -9,15 +9,13 @@ import {
   SUPPLIER_CREATE_REQUEST,
   SUPPLIER_CREATE_SUCCESS,
   SUPPLIER_CREATE_FAIL,
-  SUPPLIER_CREATE_RESET,
   SUPPLIER_UPDATE_REQUEST,
   SUPPLIER_UPDATE_SUCCESS,
   SUPPLIER_UPDATE_FAIL,
-  SUPPLIER_UPDATE_RESET,
   SUPPLIER_DELETE_REQUEST,
   SUPPLIER_DELETE_SUCCESS,
   SUPPLIER_DELETE_FAIL,
-} from '../constants/supplierConstants';
+} from '../Constants/supplierConstants';
 
 export const listSuppliers = () => async (dispatch) => {
   try {
