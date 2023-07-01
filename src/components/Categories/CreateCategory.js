@@ -33,6 +33,12 @@ const CreateCategory = ({ editMode, editCategory, onCancelEdit }) => {
     onCancelEdit();
   };
 
+  const handleCancelEdit = () => {
+    setName('');
+    setDescription('');
+    onCancelEdit();
+  };
+
   const buttonText = editMode ? 'Editar categoría' : 'Crear categoría';
 
   return (
@@ -70,7 +76,7 @@ const CreateCategory = ({ editMode, editCategory, onCancelEdit }) => {
             <button
               type="button"
               className="btn btn-secondary mt-2"
-              onClick={onCancelEdit}
+              onClick={handleCancelEdit}
             >
               Cancelar edición
             </button>
