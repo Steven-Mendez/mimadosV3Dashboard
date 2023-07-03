@@ -19,6 +19,7 @@ import { listProducts } from './Redux/Actions/ProductActions';
 import { listOrders } from './Redux/Actions/OrderActions';
 import ReleaseNotesScreen from './screens/ReleaseNotesScreen';
 import SupplierScreen from './screens/SuppliersScreen';
+import SaleScreen from './screens/SaleScreen';
 
 function App() {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ function App() {
           <PrivateRouter path="/addproduct" component={AddProduct} />
           <PrivateRouter path="/users" component={UsersScreen} />
           <PrivateRouter path="/suppliers" component={SupplierScreen} />
+          <PrivateRouter path="/sales" component={SaleScreen} />
           <PrivateRouter path="/releaseNotes" component={ReleaseNotesScreen} />
           <PrivateRouter
             path="/product/:id/edit"

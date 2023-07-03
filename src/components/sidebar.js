@@ -98,11 +98,11 @@ const Sidebar = () => {
             <li className="menu-item">
               <NavLink
                 activeClassName="active"
-                className="menu-link disabled"
-                to="/transaction"
+                className="menu-link"
+                to="/sales"
               >
                 <i className="icon fas fa-usd-circle"></i>
-                <span className="text">Transacciones</span>
+                <span className="text">Facturación</span>
               </NavLink>
             </li>
           </ul>
