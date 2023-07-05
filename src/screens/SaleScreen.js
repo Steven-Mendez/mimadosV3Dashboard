@@ -1,60 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from './../components/sidebar';
 import Header from './../components/Header';
+import { SearchBar } from '../components/Sales/SearchBar';
+import { SearchResultList } from '../components/Sales/SearchResultList';
 
 const SaleScreen = () => {
+  const [id, setId] = useState(0);
+  const [name, setName] = useState('');
+  const [stock, setStock] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0);
+  const [cart, setCart] = useState([]);
+
+  const handleClick = (result) => {
+    setId(result._id);
+    setName(result.name);
+    setStock(result.countInStock);
+    setPrice(result.price);
+    // Add to cart
+    cart.push({
+      product: {
+        _id: result._id,
+        name: result.name,
+      },
+      quantity: 1,
+      price: result.price,
+      _id: result._id,
+    });
+    setCart(cart);
+  };
+
+  const [results, setResults] = useState([]);
+  const [input, setInput] = useState('');
+
   var tableCount = 1;
-  var products = [
-    {
-      product: {
-        _id: '649f144187b034c684c83f73',
-        name: 'Alimento Perro Adulto marca Purina Dog Chow Medianos y Grandes -2kg',
-      },
-      quantity: 4,
-      price: 10,
-      _id: '649f5aa0561085869e811c7d',
-    },
-    {
-      product: {
-        _id: '649f144187b034c684c83f73',
-        name: 'Alimento Perro Adulto marca Purina Dog Chow Medianos y Grandes -2kg',
-      },
-      quantity: 4,
-      price: 10,
-      _id: '649f5aa0562085869e811c7d',
-    },
-    {
-      product: {
-        _id: '649f144187b034c684c83f73',
-        name: 'Alimento Perro Adulto marca Purina Dog Chow Medianos y Grandes -2kg',
-      },
-      quantity: 4,
-      price: 10,
-      _id: '649f5aa05610f169e811c7d',
-    },
-    {
-      product: {
-        _id: '649f144187b034c684c83f73',
-        name: 'Alimento Perro Adulto marca Purina Dog Chow Medianos y Grandes -2kg',
-      },
-      quantity: 4,
-      price: 10,
-      _id: '6f15aa0561085869e811c7d',
-    },
-    {
-      product: {
-        _id: '649f144187b034c6f1f73',
-        name: 'Alimento Perro Adulto marca Purina Dog Chow Medianos y Grandes -2kg',
-      },
-      quantity: 4,
-      price: 10,
-      _id: '649ff161085869e811c7d',
-    },
-  ];
 
   return (
     <>
-      <Sidebar />
+      <Sidebar setResults={setResults} />
       <main className="main-wrap">
         <Header />
         {/* Card Header */}
@@ -291,30 +274,13 @@ const SaleScreen = () => {
                   <h6 className="m-0 font-weight-bold text-primary">
                     Detalle Producto
                   </h6>
-                  {/* Product ID, Product Code, Product Name */}
+                  {/* Product ID, Product Name, Product Code, Product Name */}
                   <div className="row align-items-end">
-                    <input id="txtIdProducto" type="hidden" value="0" />
-                    {/* Product Code */}
-                    <div className="col-sm-2">
-                      <div className="form-group mb-0">
-                        <label
-                          for="ProductCodeInput"
-                          className="col-form-label col-form-label-sm"
-                        >
-                          Código: <span className="required">*</span>
-                        </label>
-                        <input
-                          id="ProductCodeInput"
-                          name="Code"
-                          type="text"
-                          className="form-control form-control-sm model"
-                          readonly
-                          autocomplete="off"
-                        />
-                      </div>
-                    </div>
+                    <input id="IdProduct" type="hidden" value={id} />
+                    <input id="NameProduct" type="hidden" value={name} />
+                    {/* Product ID */}
                     {/* Product Name */}
-                    <div className="col-sm-4">
+                    <div className="col-sm-12">
                       <div className="form-group mb-0">
                         <label
                           for="ProductNameInput"
@@ -322,56 +288,17 @@ const SaleScreen = () => {
                         >
                           Nombre:
                         </label>
-                        <input
-                          id="ProductNameInput"
-                          name="ProductName"
-                          type="text"
-                          className="form-control form-control-sm model"
-                          readonly
+                        <SearchBar
+                          setResults={setResults}
+                          input={input}
+                          setInput={setInput}
                         />
-                      </div>
-                    </div>
-                    {/* Product Search Button */}
-                    <div className="col-sm-2">
-                      {' '}
-                      {/* Increase column width */}
-                      <div className="form-group mb-0">
-                        <button
-                          id="SearchProductButton"
-                          type="button"
-                          className="btn btn-sm btn-primary btn-block"
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: 'auto',
-                            padding: '8px 25px',
-                          }}
-                        >
-                          <i className="fas fa-search"></i>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Add Product Button */}
-                    <div className="col-sm-2">
-                      {' '}
-                      {/* Increase column width */}
-                      <div className="form-group mb-0">
-                        <button
-                          id="AddProductButton"
-                          type="button"
-                          className="btn btn-sm btn-primary btn-block"
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: 'auto',
-                            padding: '8px 25px',
-                          }}
-                        >
-                          <i className="fa fa-plus" aria-hidden="true"></i>
-                        </button>
+                        <SearchResultList
+                          results={results}
+                          handleClick={handleClick}
+                          setResults={setResults}
+                          setInput={setInput}
+                        />
                       </div>
                     </div>
                   </div>
@@ -391,7 +318,8 @@ const SaleScreen = () => {
                           name="ProductStock"
                           type="text"
                           className="form-control form-control-sm model"
-                          readonly
+                          value={stock}
+                          readOnly
                         />
                       </div>
                     </div>
@@ -409,7 +337,8 @@ const SaleScreen = () => {
                           name="ProductPrice"
                           type="text"
                           className="form-control form-control-sm model"
-                          readonly
+                          value={price}
+                          onChange={(e) => setPrice(e.target.value)}
                         />
                       </div>
                     </div>
@@ -429,7 +358,29 @@ const SaleScreen = () => {
                           className="form-control form-control-sm model"
                           autocomplete="off"
                           min="0"
+                          value={quantity}
+                          onChange={(e) => setQuantity(e.target.value)}
                         />
+                      </div>
+                    </div>
+                    {/* Add Product Button */}
+                    <div className="col-sm-3">
+                      {/* Increase column width */}
+                      <div className="form-group mb-0">
+                        <button
+                          id="AddProductButton"
+                          type="button"
+                          className="btn btn-sm btn-primary btn-block mt-4"
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            margin: 'auto',
+                            padding: '8px 25px',
+                          }}
+                        >
+                          <i className="fa fa-plus" aria-hidden="true"></i>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -462,7 +413,7 @@ const SaleScreen = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {products.map((item) => (
+                      {cart.map((item) => (
                         <tr key={item.product._id}>
                           <td>{tableCount++}</td>
                           <td>{item.product.name}</td>

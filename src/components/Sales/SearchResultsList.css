@@ -1,0 +1,25 @@
+.results-list {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.results-list.expanded {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.results-container {
+  position: relative;
+  width: 100%;
+}
+
+.results-container.expanded {
+  max-height: 300px;
+  overflow-y: auto;
+}
