@@ -10,24 +10,155 @@ const SaleScreen = () => {
   const [stock, setStock] = useState(0);
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
+  const [subTotal, setSubTotal] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [payment, setPayment] = useState(0);
+  const [change, setChange] = useState(0);
   const [cart, setCart] = useState([]);
 
-  const handleClick = (result) => {
+  const [customerName, setCustomerName] = useState('');
+  const [customerSurname, setCustomerSurname] = useState('');
+
+  const handleProductResultClick = (result) => {
     setId(result._id);
     setName(result.name);
     setStock(result.countInStock);
     setPrice(result.price);
-    // Add to cart
-    cart.push({
-      product: {
-        _id: result._id,
-        name: result.name,
-      },
-      quantity: 1,
-      price: result.price,
-      _id: result._id,
-    });
-    setCart(cart);
+
+    // Check the cart for the product and substitute the Stock value with the Quantity value of the product in the cart
+    const productInCart = cart.find((x) => x.product._id === result._id);
+    if (productInCart) {
+      setStock(result.countInStock - productInCart.quantity);
+    }
+  };
+
+  const handleAddProductClick = () => {
+    // Check if the product is in blank
+    if (id === 0) {
+      alert('No se ha seleccionado un producto');
+      return;
+    }
+
+    // Check if the product is in stock
+    if (stock < quantity) {
+      alert('No hay suficiente stock');
+      return;
+    }
+
+    // Check if product is already in cart
+    const productInCart = cart.find((x) => x.product._id === id);
+
+    // If the product is already in the cart, update the quantity with quantityInput
+    if (productInCart) {
+      productInCart.quantity =
+        parseInt(quantity) + parseInt(productInCart.quantity);
+      setCart([...cart]);
+    }
+    // If the product is not in the cart, add it
+    else {
+      cart.push({
+        product: {
+          _id: id,
+          name: name,
+        },
+        quantity: quantity,
+        price: price,
+        _id: id,
+      });
+      setCart([...cart]);
+    }
+
+    // Clear the input fields
+    setId(0);
+    setName('');
+    setStock(0);
+    setPrice(0);
+    setQuantity(0);
+
+    // Calculate the subtotal
+    const newSubTotal = cart.reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.quantity * currentValue.price,
+      0
+    );
+    setSubTotal(newSubTotal);
+
+    // Calculate the total with taxes
+    const newTotal = newSubTotal * 1.15;
+    setTotal(newTotal);
+  };
+
+  const handleDeleteProductClick = (id) => {
+    const newCart = cart.filter((x) => x.product._id !== id);
+    setCart(newCart);
+
+    // Calculate the subtotal
+    const newSubTotal = newCart.reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.quantity * currentValue.price,
+      0
+    );
+    setSubTotal(newSubTotal);
+
+    // Calculate the total with taxes
+    const newTotal = newSubTotal * 1.15;
+    setTotal(newTotal);
+  };
+
+  const handlePaymentChange = (e) => {
+    setPayment(e.target.value);
+    setChange(e.target.value - total);
+  };
+
+  const handleSaveSaleClick = () => {
+    // Check if the cart is empty
+    if (cart.length === 0) {
+      alert('No hay productos para facturar');
+      return;
+    }
+
+    // Check if the payment is enough
+    if (payment < total) {
+      alert('El pago no es suficiente');
+      return;
+    }
+
+    // Check if the payment is in blank
+    if (payment === 0) {
+      alert('No se ha ingresado un pago');
+      return;
+    }
+
+    // Check if the payment is NaN
+    if (isNaN(payment)) {
+      alert('El pago no es válido');
+      return;
+    }
+
+    // Check if the payment is negative
+    if (payment < 0) {
+      alert('El pago no es válido');
+      return;
+    }
+
+    // Check if the payment is 0
+    if (payment === 0) {
+      alert('El pago no es válido');
+      return;
+    }
+
+    // Save the sale
+    const formattedCart = cart.map((item) => ({
+      product: item.product._id,
+      quantity: parseInt(item.quantity),
+      price: item.price,
+    }));
+
+    const sale = {
+      customerName: `${customerName} ${customerSurname}`,
+      products: formattedCart,
+      totalAmount: total,
+    };
   };
 
   const [results, setResults] = useState([]);
@@ -49,6 +180,7 @@ const SaleScreen = () => {
                 <button
                   id="btnTerminarGuardarVenta"
                   className="btn btn-warning btn-icon-split btn-sm"
+                  onClick={handleSaveSaleClick}
                 >
                   <span className="text">Finalizar</span>
                 </button>
@@ -188,7 +320,7 @@ const SaleScreen = () => {
                     Detalle cliente
                   </h6>
                   <div className="row align-items-end">
-                    <div className="col-sm-5">
+                    <div className="col-sm-6">
                       <div className="form-group mb-0">
                         <label
                           for="SecondNameInput"
@@ -201,12 +333,14 @@ const SaleScreen = () => {
                           name="SecondName"
                           type="text"
                           className="form-control form-control-sm model"
-                          readonly
-                          autocomplete="off"
+                          onChange={(e) => {
+                            setCustomerSurname(e.target.value);
+                          }}
+                          value={customerSurname}
                         />
                       </div>
                     </div>
-                    <div className="col-sm-5">
+                    <div className="col-sm-6">
                       <div className="form-group mb-0">
                         <label
                           for="NameInput"
@@ -219,27 +353,11 @@ const SaleScreen = () => {
                           name="Name"
                           type="text"
                           className="form-control form-control-sm model"
-                          readonly
-                          autocomplete="off"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-sm-2">
-                      <div className="form-group mb-0">
-                        <button
-                          id="SearchCustomerButton"
-                          type="button"
-                          className="btn btn-sm btn-primary btn-block"
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            margin: 'auto',
-                            padding: '8px 25px',
+                          onChange={(e) => {
+                            setCustomerName(e.target.value);
                           }}
-                        >
-                          <i className="fas fa-search"></i>
-                        </button>
+                          value={customerName}
+                        />
                       </div>
                     </div>
                   </div>
@@ -295,7 +413,7 @@ const SaleScreen = () => {
                         />
                         <SearchResultList
                           results={results}
-                          handleClick={handleClick}
+                          handleClick={handleProductResultClick}
                           setResults={setResults}
                           setInput={setInput}
                         />
@@ -371,6 +489,7 @@ const SaleScreen = () => {
                           id="AddProductButton"
                           type="button"
                           className="btn btn-sm btn-primary btn-block mt-4"
+                          onClick={handleAddProductClick}
                           style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -421,7 +540,12 @@ const SaleScreen = () => {
                           <td>C${item.price.toFixed(2)}</td>
                           <td>C${(item.price * item.quantity).toFixed(2)}</td>
                           <td>
-                            <button className="btn btn-sm btn-danger btn-block">
+                            <button
+                              className="btn btn-sm btn-danger btn-block"
+                              onClick={() =>
+                                handleDeleteProductClick(item.product._id)
+                              }
+                            >
                               Eliminar
                             </button>
                           </td>
@@ -453,7 +577,7 @@ const SaleScreen = () => {
                         readonly
                         type="text"
                         className="form-control"
-                        value="0"
+                        value={subTotal.toFixed(2)}
                       />
                     </div>
                   </div>
@@ -473,7 +597,7 @@ const SaleScreen = () => {
                         readonly
                         type="text"
                         className="form-control"
-                        value="0"
+                        value={total.toFixed(2)}
                       />
                     </div>
                   </div>
@@ -501,8 +625,8 @@ const SaleScreen = () => {
                         className="form-control"
                         autocomplete="off"
                         min="0"
-                        value="0"
-                        // onchange="calcularCambio()"
+                        value={payment}
+                        onChange={handlePaymentChange}
                       />
                     </div>
                   </div>
@@ -522,7 +646,7 @@ const SaleScreen = () => {
                         readonly
                         type="text"
                         className="form-control"
-                        value="0.00"
+                        value={change.toFixed(2)}
                       />
                     </div>
                   </div>
