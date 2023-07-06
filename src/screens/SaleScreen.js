@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Sidebar from './../components/sidebar';
 import Header from './../components/Header';
 import { SearchBar } from '../components/Sales/SearchBar';
 import { SearchResultList } from '../components/Sales/SearchResultList';
+import { createSale } from '../Redux/Actions/SaleActions';
 
 const SaleScreen = () => {
   const [id, setId] = useState(0);
@@ -18,6 +20,10 @@ const SaleScreen = () => {
 
   const [customerName, setCustomerName] = useState('');
   const [customerSurname, setCustomerSurname] = useState('');
+
+  const dispatch = useDispatch();
+
+  const saleCreate = useSelector((state) => state.saleCreate);
 
   const handleProductResultClick = (result) => {
     setId(result._id);
@@ -159,6 +165,27 @@ const SaleScreen = () => {
       products: formattedCart,
       totalAmount: total,
     };
+
+    // Save with redux if there is an error alert
+    dispatch(createSale(sale));
+    if (saleCreate.error) {
+      alert(saleCreate.error);
+      return;
+    }
+
+    // Clear the input fields
+    setId(0);
+    setName('');
+    setStock(0);
+    setPrice(0);
+    setQuantity(0);
+    setSubTotal(0);
+    setTotal(0);
+    setPayment(0);
+    setChange(0);
+    setCart([]);
+    setCustomerName('');
+    setCustomerSurname('');
   };
 
   const [results, setResults] = useState([]);

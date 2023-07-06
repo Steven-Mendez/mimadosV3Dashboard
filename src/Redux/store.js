@@ -28,6 +28,12 @@ import {
   supplierDeleteReducer,
 } from './Reducers/supplierReducers';
 
+import {
+  saleListReducer,
+  saleDetailsReducer,
+  saleCreateReducer,
+} from './Reducers/saleReducer';
+
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userList: userListReducer,
@@ -47,6 +53,9 @@ const reducer = combineReducers({
   supplierCreate: supplierCreateReducer,
   supplierUpdate: supplierUpdateReducer,
   supplierDelete: supplierDeleteReducer,
+  saleList: saleListReducer,
+  saleDetails: saleDetailsReducer,
+  saleCreate: saleCreateReducer,
 });
 
 // login
