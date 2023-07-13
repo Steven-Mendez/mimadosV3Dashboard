@@ -20,6 +20,7 @@ import { listOrders } from './Redux/Actions/OrderActions';
 import ReleaseNotesScreen from './screens/ReleaseNotesScreen';
 import SupplierScreen from './screens/SuppliersScreen';
 import SaleScreen from './screens/SaleScreen';
+import InvoiceComponent from './components/Sales/InvoiceComponent';
 
 function App() {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ function App() {
             path="/product/:id/edit"
             component={ProductEditScreen}
           />
+          <PrivateRouter path="/invoice/:id" component={InvoiceComponent} />
           <Route path="/login" component={Login} />
           <PrivateRouter path="*" component={NotFound} />
         </Switch>

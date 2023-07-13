@@ -91,7 +91,7 @@ export const getSaleDetails = (id) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-
+    console.log(`/api/sales/${id}`);
     const { data } = await axios.get(`/api/sales/${id}`, config);
 
     dispatch({ type: SALE_DETAILS_SUCCESS, payload: data });

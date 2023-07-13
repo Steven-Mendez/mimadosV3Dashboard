@@ -168,9 +168,15 @@ const SaleScreen = () => {
 
     // Save with redux if there is an error alert
     dispatch(createSale(sale));
+
     if (saleCreate.error) {
       alert(saleCreate.error);
       return;
+    }
+
+    // Open the invoice in a new tab
+    if (saleCreate.sale && saleCreate.sale._id) {
+      window.open(`/invoice/${saleCreate.sale._id}`, '_blank');
     }
 
     // Clear the input fields
